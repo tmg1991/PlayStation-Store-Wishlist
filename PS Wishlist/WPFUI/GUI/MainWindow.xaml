@@ -1,0 +1,92 @@
+﻿<Window x:Class="WPFUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFUI"
+        mc:Ignorable="d"
+        Title="PS Store Wishlist" Height="450" Width="800">
+    <Window.Resources>
+        <Thickness x:Key="listItemMargin" Left="0" Top="2" Right="10" Bottom="2" />
+        <Thickness x:Key="headerMargin" Left="5" Top="2" Right="5" Bottom="20" />
+        <local:PriceToVisibilityConverter x:Key="PriceToVisibilityConverter"/>
+        <local:BooleanToHiddenVisibilityConverter x:Key="BoolToHiddenVisibilityConverter"/>
+    </Window.Resources>
+
+
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <TextBox x:Name="InputField" Grid.Row="0" Grid.Column="0" Margin="{StaticResource headerMargin}" Text="copy game URL here" GotFocus="InputField_GotFocus" FontStyle="Italic"/>
+        <Button x:Name="BtnAdd" Content="🞣  Add" Grid.Row="0" Grid.Column="1" Margin="{StaticResource headerMargin}" Click="BtnAdd_Click" IsEnabled="{Binding Path=DataContext.IsBusy}"/>
+        <Button x:Name="BtnRefresh" Content="↻  Refresh" Grid.Row="0" Grid.Column="2" Margin="{StaticResource headerMargin}" Click="BtnRefresh_Click" />
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Visibility="{Binding Path=DataContext.IsBusy, Converter={StaticResource BoolToHiddenVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={x:Static RelativeSource.Self}}"
+                    HorizontalAlignment="Stretch">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" SpreadMethod="Reflect">
+                    <GradientStop Color="#FFD47C12" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+            <TextBlock x:Name="TxtLoading" Text="⏱️ Working ..." Margin="{StaticResource headerMargin}" HorizontalAlignment="Center" />
+        </StackPanel>
+
+
+
+        <ListBox x:Name="ListboxGames" Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Games, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="ListboxGames_SelectionChanged" ScrollViewer.CanContentScroll="False">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+
+            <ListBox.ItemTemplate >
+                <DataTemplate >
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" MaxHeight="40" Source="{Binding Path=ImageSource}" Margin="{StaticResource listItemMargin}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Text="{Binding Path=Title}" Margin="{StaticResource listItemMargin}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Price:" Margin="{StaticResource listItemMargin}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=FinalPrice}" Margin="{StaticResource listItemMargin}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="3" Text="Original price:" Margin="{StaticResource listItemMargin}" Visibility="{Binding Path=OriginalPrice, Converter={StaticResource PriceToVisibilityConverter}}" />
+                        <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding Path=OriginalPrice}" Margin="{StaticResource listItemMargin}" />
+                        <TextBlock Grid.Row="0" Grid.Column="5" Grid.RowSpan="2" Text="✯" Visibility="{Binding Path=OriginalPrice, Converter={StaticResource PriceToVisibilityConverter}}" FontSize="30" Foreground="#FFE4C60B"/>
+                        <Button Grid.Row="0" Grid.Column="6" Grid.RowSpan="2" Content="   ❌   " HorizontalContentAlignment="Right" Click="Button_Click" BorderBrush="#00707070" Background="#00DDDDDD"/>
+                    </Grid>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+
+        <TextBlock Grid.Row="3" Grid.Column="4" Text="™.G" HorizontalAlignment="Right"/>
+
+    </Grid>
+</Window>
