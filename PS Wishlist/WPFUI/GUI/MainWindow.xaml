@@ -45,7 +45,15 @@
             <TextBlock x:Name="TxtLoading" Text="⏱️ Working ..." Margin="{StaticResource headerMargin}" HorizontalAlignment="Center" />
         </StackPanel>
 
-
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Visibility="{Binding Path=DataContext.IsGameOnSale, Converter={StaticResource BoolToHiddenVisibilityConverter}, UpdateSourceTrigger=PropertyChanged, RelativeSource={x:Static RelativeSource.Self}}">
+            <StackPanel.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" SpreadMethod="Reflect">
+                    <GradientStop Color="#FFD4CB12" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+            <TextBlock x:Name="GameOnSale" Text="✯ A game is on sale" Margin="{StaticResource headerMargin}" HorizontalAlignment="Center" />
+        </StackPanel>
 
         <ListBox x:Name="ListboxGames" Grid.Row="2" Grid.ColumnSpan="3" ItemsSource="{Binding Games, UpdateSourceTrigger=PropertyChanged}" SelectionChanged="ListboxGames_SelectionChanged" ScrollViewer.CanContentScroll="False">
             <ListBox.ItemContainerStyle>

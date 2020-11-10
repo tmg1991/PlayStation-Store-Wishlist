@@ -33,6 +33,22 @@ namespace WPFUI
             set
             {
                 _isBusy = value;
+                if (_isBusy)
+                {
+                    IsGameOnSale = false;
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isGameOnSale = false;
+
+        public bool IsGameOnSale
+        {
+            get { return _isGameOnSale; }
+            set
+            {
+                _isGameOnSale = value;
                 OnPropertyChanged();
             }
         }
@@ -135,10 +151,23 @@ namespace WPFUI
 
                 }
                 SaveLoadUtils.SaveToJson(Games, _jsonFilePath);
+                CheckIfGameIsOnSale();
                 IsBusy = false;
             }
         }
 
+        private void CheckIfGameIsOnSale()
+        {
+            IsGameOnSale = false;
+            foreach (var game in Games)
+            {
+                if (!string.IsNullOrEmpty(game.OriginalPrice))
+                {
+                    IsGameOnSale = true;
+                    break;
+                }
+            }
+        }
 
         public void AddGameFromUrl(string url)
         {
@@ -209,6 +238,7 @@ namespace WPFUI
 
                 Games.Remove(gameItem);
                 SaveLoadUtils.SaveToJson(Games, _jsonFilePath);
+                CheckIfGameIsOnSale();
             }
         }
 
@@ -275,6 +305,7 @@ namespace WPFUI
 
             Games.Add(game);
             SaveLoadUtils.SaveToJson(Games, _jsonFilePath);
+            CheckIfGameIsOnSale();
         }
 
         private void ScrapePrices(GameItem game, HtmlDocument htmlDocument)
