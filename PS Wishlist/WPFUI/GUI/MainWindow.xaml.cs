@@ -65,6 +65,10 @@ namespace WPFUI
 
         private void ListboxGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (e?.AddedItems == null || e.AddedItems.Count < 1)
+            {
+                return;
+            }
             var item = e.AddedItems[0];
             _viewModel?.OpenGameUrl(item);
         }
