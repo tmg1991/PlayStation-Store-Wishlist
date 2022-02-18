@@ -87,11 +87,7 @@ namespace WPFUI
                 lock (_locker)
                 {
                     IsBusy = true;
-                    Games = SaveLoadUtils.LoadFromJson(_jsonFilePath);
-                    foreach (var game in Games)
-                    {
-                        game.ImageSource = LoadImage(game.CoverImagePath);
-                    }
+                    LoadGamesFromJson();
                     IsBusy = false;
                 }
             }
@@ -99,7 +95,15 @@ namespace WPFUI
             {
                 //ignore
             }
+        }
 
+        private void LoadGamesFromJson()
+        {
+            Games = SaveLoadUtils.LoadFromJson(_jsonFilePath);
+            foreach (var game in Games)
+            {
+                game.ImageSource = LoadImage(game.CoverImagePath);
+            }
         }
 
         public void OpenGameUrl(object item)
@@ -136,6 +140,7 @@ namespace WPFUI
             lock (_locker)
             {
                 IsBusy = true;
+                LoadGamesFromJson();
                 foreach (var game in Games)
                 {
                     try
