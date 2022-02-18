@@ -21,16 +21,13 @@ namespace WPFUI
             var task = Task.Run(() =>
             {
                 _viewModel?.UpdateGamePrices();
-            });
-
-            task.ContinueWith((t) =>
+            }).ContinueWith((t) =>
             {
                 Dispatcher.Invoke(() =>
                 {
                     ListboxGames.Items.Refresh();
                 });
             });
-
         }
 
        
@@ -50,17 +47,13 @@ namespace WPFUI
             var task = Task.Run(() =>
             {
                 _viewModel?.AddGameFromUrl(url);
-            });
-
-            task.ContinueWith((t) =>
+            }).ContinueWith((t) =>
             {
                 Dispatcher.Invoke(() =>
                 {
                     ListboxGames.Items.Refresh();
                 });
             });
-
-
         }
 
         private void ListboxGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
