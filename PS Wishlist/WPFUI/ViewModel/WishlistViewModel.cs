@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -244,11 +245,17 @@ namespace WPFUI
 
         private void CreateImageDirectory()
         {
-            string cwd = Directory.GetCurrentDirectory();
-            _dataDirectory = Path.Combine(cwd, "Data");
-            Directory.CreateDirectory(_dataDirectory);
-            _jsonFilePath = Path.Combine(_dataDirectory, "Wishlist.json");
+            _dataDirectory = ConfigurationManager.AppSettings.Get("DataDirectory");
+            try
+            {
+                Directory.CreateDirectory(_dataDirectory);
+            }
+            catch (Exception)
+            {
+                ShowMessage($"Cannot create directory at {_dataDirectory}", MessageType.Error);
+            }
 
+            _jsonFilePath = Path.Combine(_dataDirectory, "Wishlist.json");
         }
 
         private void DoAddGameFromUrl(string url)
